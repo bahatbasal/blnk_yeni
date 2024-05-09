@@ -1,3 +1,5 @@
+import 'package:blnk_yeni/Pages/ApplicationPage.dart';
+import 'package:blnk_yeni/Pages/MainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -62,12 +64,31 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>MainPage()));
             },
           ),
         ),
         body: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    size: 50,
+                    color: Color(0xFF395077),
+                  ),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+                  },
+                ),
+                SizedBox(width: 20,)
+              ],
+            ),
+
+
+
             Expanded(
               flex: 5,
               child: Column(

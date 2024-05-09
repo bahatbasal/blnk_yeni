@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:blnk_yeni/LoginAndSignup/user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'LoginAndSignup/api_connection.dart';
 import 'Modals/Job.dart';
 import 'Modals/Comment.dart';
 import 'Modals/UserCommenter.dart';
+import 'Modals/Application.dart';
 
 class ApiService extends ChangeNotifier {
 
@@ -14,6 +16,7 @@ class ApiService extends ChangeNotifier {
   late String mainUserMail;
 
   int selectedCategory=0;
+  int selectedCategoryonApplication=0;
 
   int selectedCategoryOnProfile=0;
 
@@ -23,6 +26,8 @@ class ApiService extends ChangeNotifier {
   List<Job> jobListOnScreen=[];
 
   List<Job> jobListOnProfile=[];
+
+  List<Application> appliactionListOnPage=[];
 
   void generateAvailableJob() {
     List<Job> dummyJobs=jobList;
@@ -62,6 +67,91 @@ class ApiService extends ChangeNotifier {
     jobList=list;
     generateAvailableJob();
   }
+  //Demet Get
+
+
+  Future getRecievedApplication() async{
+  var url =API.recievedApplicationUrl;
+
+  Map<String,dynamic> jsonMap={
+    "user_id": mainUserId
+  };
+
+  var jsonBody=jsonEncode(jsonMap);
+  var response = await http.post(Uri.parse(url),body:jsonBody);
+
+   if (response.statusCode == 200) {
+
+    var jsonData = jsonDecode(response.body);
+    List<Application> receivedapplicationlist=[];//bundan emin değilim tüm applicantlar listelenmeli mi?
+
+    for(var eachApplication in jsonData){
+       Application application =Application.fromJson(eachApplication);
+      receivedapplicationlist.add(application);
+      }
+
+    print(receivedapplicationlist.length);
+    appliactionListOnPage=receivedapplicationlist;
+    notifyListeners();
+
+  } else {
+    print('Failed to load application');
+  }
+}
+
+  Future getAppliedApplication() async{
+    var url =API.appliedApplicationUrl;
+
+    Map<String,dynamic> jsonMap={
+      "applicant_id": mainUserId
+    };
+
+    var jsonBody=jsonEncode(jsonMap);
+    var response = await http.post(Uri.parse(url),body:jsonBody);
+
+    if (response.statusCode == 200) {
+
+      var jsonData = jsonDecode(response.body);
+      List<Application> appliedapplicationlist=[];//bundan emin değilim tüm applicantlar listelenmeli mi?
+
+      for(var eachApplication in jsonData){
+        Application application =Application.fromJsonWithStatue(eachApplication);
+        appliedapplicationlist.add(application);
+      }
+
+      print(appliedapplicationlist.length);
+      appliactionListOnPage=appliedapplicationlist;
+      notifyListeners();
+
+    } else {
+      print('Failed to load application');
+    }
+  }
+
+  //Create application
+  Future createApplication(int job_id, double price) async{
+    var url =API.createApplicationUrl;
+
+
+    Map<String,dynamic> jsonMap={
+      'applicant_id':mainUserId,
+      'job_id':job_id,
+      'price':price
+    };
+
+    var jsonBody=jsonEncode(jsonMap);
+    var response = await http.post(Uri.parse(url),body:jsonBody);
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "You applied the job succesfully!");
+
+    } else {
+      print('Failed to load application');
+    }
+  }
+
+
 
   Future getComments() async {
     var url = API.CommentUrl+"$mainUserId";
@@ -139,6 +229,8 @@ class ApiService extends ChangeNotifier {
     notifyListeners();
   }
 
+
+
   Future DoneJob(Job job) async {
     var url = API.DoneJobUrl;
     var response = await http.put(Uri.parse(url), body: "{\"job_id\":${job.id}}");
@@ -164,6 +256,27 @@ class ApiService extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+/*DEMET POST
+
+Future PostApplicant(Applicant applicant) async{
+
+   var url= API.Applicant.JobUrl;
+   var response = await http.post(Uri.parse(url), body: jsonEncode(applicant.toJsonPost()));
+
+  if (response.statusCode == 200) {
+      print("Succesfuly applicant the job!");
+    } else {
+      print("You cannot applicant the job!");
+    }
+    notifyListeners();
+  }
+
+
+ */
+
+
+
   Future PostComment(String? comment,int? userfrom_id,int? userto_id, int? job_id, ) async {
     var url = API.CommentUrl;
     print(jsonEncode(

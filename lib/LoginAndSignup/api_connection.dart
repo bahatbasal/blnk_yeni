@@ -18,5 +18,10 @@ class API
   static const UserByIdUrl= "$hostConnect/user_by_id.php?user_id=";
   static const JobByIdUrl= "$hostConnect/job_by_id.php?job_id=";
 
+  //Application
+  static const recievedApplicationUrl= "$hostConnect/takenapplications.php";
+  static const appliedApplicationUrl= "$hostConnect/appliedapplications.php";
+  static const createApplicationUrl= "$hostConnect/createapplication.php";
+
 
 }

@@ -2,6 +2,8 @@
 import 'package:blnk_yeni/Pages/ProfilePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../ApiService.dart';
@@ -85,6 +87,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController priceControler= TextEditingController();
     return Consumer<ApiService>(builder: (context, value, child) {
       return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -194,9 +197,22 @@ class _MainPageState extends State<MainPage> {
                                               context: context,
                                               builder: (context) {
                                                 return AlertDialog(
-                                                  content: Center(
-                                                    child: Text(
-                                                        "Do you want to accept this job?"),
+                                                  content: Container(
+                                                    height: 400,
+                                                    child: Column(
+                                                      children: [
+                                                        TextField(
+                                                          controller: priceControler,
+                                                          decoration: InputDecoration(
+                                                            hintText: "What is your price offer?",
+                                                          ),
+                                                          keyboardType: TextInputType.number,
+                                                          inputFormatters: <TextInputFormatter>[
+                                                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                   actions: [
                                                     MaterialButton(
@@ -207,33 +223,15 @@ class _MainPageState extends State<MainPage> {
                                                                 8)),
                                                         color: Colors.blue,
                                                         child: Text(
-                                                          "Yes",
+                                                          "Apply",
                                                           style: TextStyle(
                                                               color: Colors
                                                                   .white),
                                                         ),
                                                         onPressed: () async {
-                                                          Job job = Job(
-                                                              id: value
-                                                                  .jobListOnScreen[
-                                                              index]
-                                                                  .id,
-                                                              name:
-                                                              nameController
-                                                                  .text,
-                                                              body:
-                                                              bodyController
-                                                                  .text,
-                                                              giverId: value
-                                                                  .jobListOnScreen[
-                                                              index]
-                                                                  .giverId,
-                                                              accepterId: value
-                                                                  .mainUserId);
-
-                                                          await value.AcceptJob(
-                                                              job);
-                                                          await value.getJobs();
+                                                          int? job_id= value.jobListOnScreen[index].id;
+                                                          print(job_id);
+                                                          await value.createApplication(job_id!, double.parse(priceControler.text));
                                                           Navigator.pop(
                                                               context);
                                                         }),
@@ -270,7 +268,7 @@ class _MainPageState extends State<MainPage> {
                                             padding:
                                             const EdgeInsets.all(8.0),
                                             child: Text(
-                                              "Accept",
+                                              "Apply",
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
