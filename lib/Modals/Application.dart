@@ -27,7 +27,7 @@ class Application {
       userName: json['user_name'],
       jobName: json['job_name'],
       price: double.parse(json['price']),
-      statue: int.parse(json['price']),
+      statue: int.parse(json['status']),
     );
   }
 
@@ -47,7 +47,7 @@ class Application {
     data['user_name'] = this.userName;
     data['job_name'] = this.jobName;
     data['price'] = this.price.toString();
-    data['statue'] = this.statue.toString();
+    data['status'] = this.statue.toString();
     return data;
   }
 }

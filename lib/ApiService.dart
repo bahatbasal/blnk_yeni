@@ -151,6 +151,46 @@ class ApiService extends ChangeNotifier {
     }
   }
 
+  //Accept application
+  Future acceptApplication(int application_id) async{
+    var url =API.acceptApplicationUrl;
+
+
+    Map<String,dynamic> jsonMap={
+      'application_id': application_id
+    };
+
+    var jsonBody=jsonEncode(jsonMap);
+    var response = await http.post(Uri.parse(url),body:jsonBody);
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "You accepted the application succesfully!");
+
+    } else {
+      print('Error occured');
+    }
+  }
+//Reject application
+  Future rejectApplication(int application_id) async{
+    var url =API.rejectApplicationUrl;
+
+
+    Map<String,dynamic> jsonMap={
+      'application_id': application_id
+    };
+
+    var jsonBody=jsonEncode(jsonMap);
+    var response = await http.post(Uri.parse(url),body:jsonBody);
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "You rejected the application succesfully!");
+
+    } else {
+      print('Error occured');
+    }
+  }
 
 
   Future getComments() async {

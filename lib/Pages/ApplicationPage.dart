@@ -97,14 +97,37 @@ class _ApplicationPageState extends State<ApplicationPage> {
                           subtitle: Text(value.appliactionListOnPage[index].jobName),
                           trailing: Container(
                           width: 150,
-                            child: Row(
+                            child:
+                            value.selectedCategoryonApplication==0?
+                            Row(
                               children: [
                                 Text(value.appliactionListOnPage[index].price.toString()+"TL"),
-                                IconButton(onPressed: (){}, icon: Icon(Icons.check_circle,color: Colors.green,)
+                                IconButton(onPressed: ()async{
+                                  setState(() {
+                                    value.acceptApplication(int.parse(value.appliactionListOnPage[index].applicationId));
+                                  });
+                                }, icon: Icon(Icons.check_circle,color: Colors.green,)
                                 ),
-                                IconButton(onPressed: (){}, icon: Icon(Icons.cancel,color:Colors.red,))
+                                IconButton(onPressed: ()async{
+                                  setState(() {
+                                    value.rejectApplication(int.parse(value.appliactionListOnPage[index].applicationId));
+                                  });
+                                }, icon: Icon(Icons.cancel,color:Colors.red,))
                               ],
-                            ),
+                            ):
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(value.appliactionListOnPage[index].price.toString()+"TL"),
+                                SizedBox(width: 5,),
+                                 value.appliactionListOnPage[index].statue==0?
+                                 Icon(Icons.timelapse,size: 40,color: Colors.yellow,)
+                                     :value.appliactionListOnPage[index].statue==1?
+                                 Icon(Icons.cancel,size: 40,color: Colors.red,)
+                                     :
+                                 Icon(Icons.check_circle,size: 40,color: Colors.green,)
+                              ],
+                            )
                           ),
                         ),
                       ),

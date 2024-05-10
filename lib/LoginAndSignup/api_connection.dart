@@ -22,6 +22,8 @@ class API
   static const recievedApplicationUrl= "$hostConnect/takenapplications.php";
   static const appliedApplicationUrl= "$hostConnect/appliedapplications.php";
   static const createApplicationUrl= "$hostConnect/createapplication.php";
+  static const rejectApplicationUrl= "$hostConnect/rejectapplication.php";
+  static const acceptApplicationUrl= "$hostConnect/acceptapplication.php";
 
 
 }
