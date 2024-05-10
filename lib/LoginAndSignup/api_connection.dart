@@ -10,7 +10,8 @@ class API
 
   //Jobs
   static const JobUrl = "$hostConnect/jobs/jobs_crud.php";
-  static const DoneJobUrl = "$hostConnect/jobs/jobsMakeDone.php";
+  static const AccepterDoneJobUrl = "$hostConnect/jobs/jobsMakeDoneAccepter.php";
+  static const GiverDoneJobUrl = "$hostConnect/jobs/jobsMakeDoneGiver.php";
 
   //Comments
 

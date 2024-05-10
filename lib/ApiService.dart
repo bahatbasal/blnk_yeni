@@ -47,10 +47,8 @@ class ApiService extends ChangeNotifier {
   Future getJobs() async {
     var url = API.JobUrl;
     var response = await http.get(Uri.parse(url));
-
     var jsonData= jsonDecode(response.body);
     List<Job> list=[];
-
     for(var eachJob in jsonData){
       Job jos=Job(
           id: int.parse(eachJob['job_id']),
@@ -58,9 +56,9 @@ class ApiService extends ChangeNotifier {
           body: eachJob['job_body'],
           giverId: int.parse(eachJob['giver_id']),
           accepterId: int.parse(eachJob['excepter_id']),
-        isDone:int.parse(eachJob['isDone'])
+        isDoneAccepter:int.parse(eachJob['isDoneExcepter']),
+        isDoneGiver:int.parse(eachJob['isDoneGiver']),
       );
-
       list.add(jos);
     }
 
@@ -272,13 +270,25 @@ class ApiService extends ChangeNotifier {
 
 
   Future DoneJob(Job job) async {
-    var url = API.DoneJobUrl;
+    if(job.accepterId==mainUserId){
+    var url = API.AccepterDoneJobUrl;
     var response = await http.put(Uri.parse(url), body: "{\"job_id\":${job.id}}");
 
     if (response.statusCode == 200) {
       print("Succesfuly Done the job");
     } else {
       print("Başarısız");
+    }
+    }
+    if(job.giverId==mainUserId){
+      var url = API.GiverDoneJobUrl;
+      var response = await http.put(Uri.parse(url), body: "{\"job_id\":${job.id}}");
+
+      if (response.statusCode == 200) {
+        print("Succesfuly Done the job");
+      } else {
+        print("Başarısız");
+      }
     }
     notifyListeners();
   }
@@ -351,7 +361,7 @@ Future PostApplicant(Applicant applicant) async{
     List<Job> acceptedJobs = [];
     if(dummyJobs.isNotEmpty){
       for (int i = 0; i < dummyJobs.length; i++) {
-        if (dummyJobs[i].accepterId == mainUserId&&dummyJobs[i].isDone==0) {
+        if (dummyJobs[i].accepterId == mainUserId&&dummyJobs[i].isDoneGiver==0&&dummyJobs[i].isDoneAccepter==0) {
           acceptedJobs.add(dummyJobs[i]);
         }
       }
@@ -364,7 +374,7 @@ Future PostApplicant(Applicant applicant) async{
     List<Job> postedJobs = [];
     if(dummyJobs.isNotEmpty){
       for (int i = 0; i < dummyJobs.length; i++) {
-        if (dummyJobs[i].giverId == mainUserId&&dummyJobs[i].isDone==0) {
+        if (dummyJobs[i].giverId == mainUserId&&dummyJobs[i].isDoneGiver==0&&dummyJobs[i].isDoneAccepter==0) {
           postedJobs.add(dummyJobs[i]);
         }
       }
@@ -379,7 +389,7 @@ Future PostApplicant(Applicant applicant) async{
     List<Job> doneJobs = [];
     if(dummyJobs.isNotEmpty){
       for (int i = 0; i < dummyJobs.length; i++) {
-        if ((dummyJobs[i].accepterId == mainUserId||dummyJobs[i].giverId == mainUserId)&&dummyJobs[i].isDone==1) {
+        if ((dummyJobs[i].accepterId == mainUserId||dummyJobs[i].giverId == mainUserId)&&dummyJobs[i].isDoneGiver==1&&dummyJobs[i].isDoneAccepter==1) {
           doneJobs.add(dummyJobs[i]);
         }
       }

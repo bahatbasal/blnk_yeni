@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfileJobsPage> {
                       Text(value.jobListOnProfile[index].name),
                       subtitle:
                       Text(value.jobListOnProfile[index].body),
-                      trailing: value.selectedCategoryOnProfile==0?
+                      trailing: value.selectedCategoryOnProfile!=2?
                       doneAlert(context,index,value):
                           value.selectedCategoryOnProfile==2?
                           Column(

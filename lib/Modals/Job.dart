@@ -6,9 +6,10 @@ class Job{
   String body;
   int giverId;
   late int? accepterId;
-  late int? isDone;
+  late int? isDoneGiver;
+  late int? isDoneAccepter;
 
-  Job({required this.name,this.id,this.accepterId,required this.giverId, required this.body,this.isDone});
+  Job({required this.name,this.id,this.accepterId,required this.giverId, required this.body,this.isDoneGiver,this.isDoneAccepter});
 
   factory Job.fromJson(Map<String, dynamic> json) {
     return Job(
@@ -17,7 +18,8 @@ class Job{
       body:json['job_body'],
       giverId: json['giver_id'],
       accepterId: json['excepter_id'],
-      isDone: json['isDone'],
+      isDoneGiver: json['isDoneGiver'],
+      isDoneAccepter: json['isDoneGiver'],
     );
   }
 
