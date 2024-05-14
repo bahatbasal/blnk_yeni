@@ -8,6 +8,7 @@ import 'Modals/Job.dart';
 import 'Modals/Comment.dart';
 import 'Modals/UserCommenter.dart';
 import 'Modals/Application.dart';
+import 'Modals/FollowUserModal.dart';
 
 class ApiService extends ChangeNotifier {
 
@@ -28,6 +29,10 @@ class ApiService extends ChangeNotifier {
   List<Job> jobListOnProfile=[];
 
   List<Application> appliactionListOnPage=[];
+
+  List<FollowUserModal> followedUserList=[];
+  List<FollowUserModal> followerUserList=[];
+
 
   void generateAvailableJob() {
     List<Job> dummyJobs=jobList;
@@ -267,8 +272,6 @@ class ApiService extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future DoneJob(Job job) async {
     if(job.accepterId==mainUserId){
     var url = API.AccepterDoneJobUrl;
@@ -307,27 +310,8 @@ class ApiService extends ChangeNotifier {
     notifyListeners();
   }
 
-/*DEMET POST
 
-Future PostApplicant(Applicant applicant) async{
-
-   var url= API.Applicant.JobUrl;
-   var response = await http.post(Uri.parse(url), body: jsonEncode(applicant.toJsonPost()));
-
-  if (response.statusCode == 200) {
-      print("Succesfuly applicant the job!");
-    } else {
-      print("You cannot applicant the job!");
-    }
-    notifyListeners();
-  }
-
-
- */
-
-
-
-  Future PostComment(String? comment,int? userfrom_id,int? userto_id, int? job_id, ) async {
+  Future PostComment(String? comment,int? userfrom_id,int? userto_id, int? job_id,int rating ) async {
     var url = API.CommentUrl;
     print(jsonEncode(
         {
@@ -335,6 +319,7 @@ Future PostApplicant(Applicant applicant) async{
           'userto_id':userto_id,
           'job_id': job_id,
           'comment': comment,
+          'ratio': rating
         }
     ));
     var response = await http.post(
@@ -345,6 +330,7 @@ Future PostApplicant(Applicant applicant) async{
               'userto_id':userto_id,
               'job_id': job_id,
               'comment': comment,
+              'ratio': rating
             }
     ));
 
@@ -397,5 +383,69 @@ Future PostApplicant(Applicant applicant) async{
     jobListOnProfile=doneJobs;
     notifyListeners();
   }
+
+  //Get Follower User
+
+  Future getFollowers() async {
+
+    var url = API.followersUrl;
+
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':mainUserId
+            }
+        ));
+
+    print(response.body);
+
+    var jsonData= jsonDecode(response.body);
+
+    for(var eachUser in jsonData){
+      FollowUserModal user = FollowUserModal.fromJson(eachUser);
+      followerUserList.add(user);
+    }
+
+    if (response.statusCode == 200) {
+      print("Succesfuly Got the followed user");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
+
+
+  //Get followed user
+  Future getFollowings() async {
+
+    var url = API.followingsUrl;
+
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':mainUserId
+            }
+        ));
+
+    print(response.body);
+
+    var jsonData= jsonDecode(response.body);
+
+    for(var eachUser in jsonData){
+      FollowUserModal user = FollowUserModal.fromJson(eachUser);
+      followedUserList.add(user);
+    }
+
+    if (response.statusCode == 200) {
+      print("Succesfuly Got the followed user");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
+
+
 
 }

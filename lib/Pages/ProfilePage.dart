@@ -1,4 +1,5 @@
 import 'package:blnk_yeni/Pages/ApplicationPage.dart';
+import 'package:blnk_yeni/Pages/Followed.dart';
 import 'package:blnk_yeni/Pages/MainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -25,9 +26,10 @@ class _ProfilePageState extends State<ProfilePage> {
           actions: [
             GestureDetector(
               onTap: () {
-                value.selectedCategoryOnProfile=0;
+                value.selectedCategoryOnProfile = 0;
                 value.generateAcceptedJobOnProfile();
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileJobsPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfileJobsPage()));
               },
               child: Center(
                 child: Container(
@@ -64,7 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>MainPage()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MainPage()));
             },
           ),
         ),
@@ -80,15 +83,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Color(0xFF395077),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ApplicationPage()));
                   },
                 ),
-                SizedBox(width: 20,)
+                SizedBox(
+                  width: 20,
+                )
               ],
             ),
-
-
-
             Expanded(
               flex: 5,
               child: Column(
@@ -115,6 +120,78 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(color: Color(0xFF395077), fontSize: 20),
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 60),
+                    child: Card(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Followed()));
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    value.followedUserList.length.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF395077),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Followed",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF395077),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 40,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap:(){
+
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    value.followerUserList.length.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF395077),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Follower",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF395077),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Text(
@@ -126,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Expanded(
-                    child:FutureBuilder(
+                    child: FutureBuilder(
                       future: value.getComments(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
@@ -141,25 +218,32 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("From: ${value.myComments[index].userFrom.user_name} ",
+                                              Text(
+                                                  "From: ${value.myComments[index].userFrom.user_name} ",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15,
-                                                      color: Color(0xFF395077))),
-                                              Text("For: ${value.myComments[index].job}",
+                                                      color:
+                                                          Color(0xFF395077))),
+                                              Text(
+                                                  "For: ${value.myComments[index].job}",
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 15,
-                                                      color: Color(0xFF395077))),
+                                                      color:
+                                                          Color(0xFF395077))),
                                             ],
                                           ),
-                                          Text(
-                                              value.myComments[index].comment,
+                                          Text(value.myComments[index].comment,
                                               style: TextStyle(
                                                   fontSize: 13,
                                                   color: Color(0xFF87A2B6)))

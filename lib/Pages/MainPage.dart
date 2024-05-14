@@ -130,7 +130,9 @@ class _MainPageState extends State<MainPage> {
                             fontWeight: FontWeight.bold),
                       ),
                       trailing: GestureDetector(
-                        onTap: () {
+                        onTap: () async{
+                          await value.getFollowings();
+                          await value.getFollowers();
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
                         },
                         child: Icon(
