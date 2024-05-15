@@ -4,21 +4,21 @@ import 'package:provider/provider.dart';
 
 import '../ApiService.dart';
 
-class Followed extends StatefulWidget {
-  const Followed({super.key});
+class Follower extends StatefulWidget {
+  const Follower({super.key});
 
   @override
-  State<Followed> createState() => _FollowedState();
+  State<Follower> createState() => _FollowedState();
 }
 
-class _FollowedState extends State<Followed> {
+class _FollowedState extends State<Follower> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApiService>(builder: (context, value, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Followed",
+            "Follower",
           ),
           centerTitle: true,
           backgroundColor: Color(0xFF395077),
@@ -30,27 +30,18 @@ class _FollowedState extends State<Followed> {
               child: Card(
                 child: ListTile(
                   title: Text(
-                    value.followedUserList[index].userName,
+                    value.followerUserList[index].userName,
                     style: TextStyle(fontSize: 20),
                   ),
                   subtitle: Text(
-                    value.followedUserList[index].userEmail,
+                    value.followerUserList[index].userEmail,
                     style: TextStyle(fontSize: 16),
                   ),
-                  trailing:
-                      GestureDetector(onTap: ()async {
-                        value.UnfollowUser(int.parse(value.followedUserList[index].userId));
-                        setState(() {
-                          value.followedUserList.clear();
-                          value.getFollowings();
-                        });
-                      },
-                          child: Icon(Icons.delete)),
                 ),
               ),
             );
           },
-          itemCount: value.followedUserList.length,
+          itemCount: value.followerUserList.length,
         ),
       );
     });

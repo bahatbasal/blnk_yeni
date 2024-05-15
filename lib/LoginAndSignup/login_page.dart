@@ -206,6 +206,11 @@ class _LoginPageState extends State<LoginPage>
                                   value.mainUserMail=userInfo.user_email;
                                   value.mainUserName=userInfo.user_name;
                                   await value.getJobs();
+                                  await value.getMyRate();
+                                  value.followedUserList.clear();
+                                  value.followerUserList.clear();
+                                  await value.getFollowings();
+                                  await value.getFollowers();
                                   //save Userinfo to local storage
                                   await RememberUserPrefs.saveRememberUser(userInfo);
 

@@ -17,6 +17,7 @@ class API
   static const CommentUrl= "$hostConnect/my_comments.php?userto_id=";
   static const UserByIdUrl= "$hostConnect/user_by_id.php?user_id=";
   static const JobByIdUrl= "$hostConnect/job_by_id.php?job_id=";
+  static const getAvgUrl= "$hostConnect/getAvgRate.php";
 
   //Application
   static const recievedApplicationUrl= "$hostConnect/takenapplications.php";
@@ -28,6 +29,9 @@ class API
   //Follow
   static const followingsUrl= "$hostConnect/follow/followings.php";
   static const followersUrl= "$hostConnect/follow/getFollowers.php";
+  static const UnfollowUrl= "$hostConnect/follow/unfollow.php";
+  static const followUrl= "$hostConnect/follow/tofollow.php";
+
 
 
 }

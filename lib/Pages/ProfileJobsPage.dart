@@ -202,6 +202,7 @@ class _ProfilePageState extends State<ProfileJobsPage> {
                       return Card(
                         margin: EdgeInsets.fromLTRB(30, 0, 30, 10),
                         child: ListTile(
+                          contentPadding: EdgeInsets.all(15),
                             leading: Icon(
                               Icons.account_circle_rounded,
                               size: 40,
@@ -214,8 +215,9 @@ class _ProfilePageState extends State<ProfileJobsPage> {
                                 : value.selectedCategoryOnProfile == 2
                                     ? Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
+                                          //
                                           GestureDetector(
                                             onTap: () {
                                               writeComment(value, index);
@@ -228,11 +230,12 @@ class _ProfilePageState extends State<ProfileJobsPage> {
                                               ),
                                               child: Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    const EdgeInsets.all(8),
                                                 child: Text(
                                                   "Comment",
                                                   style: TextStyle(
-                                                      color: Colors.white),
+                                                      color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),

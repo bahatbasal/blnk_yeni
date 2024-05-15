@@ -15,6 +15,7 @@ class ApiService extends ChangeNotifier {
   late int mainUserId;
   late String mainUserName;
   late String mainUserMail;
+  late double mainUserRate;
 
   int selectedCategory=0;
   int selectedCategoryonApplication=0;
@@ -418,9 +419,7 @@ class ApiService extends ChangeNotifier {
 
   //Get followed user
   Future getFollowings() async {
-
     var url = API.followingsUrl;
-
     var response = await http.post(
         Uri.parse(url),
         body: jsonEncode(
@@ -428,16 +427,12 @@ class ApiService extends ChangeNotifier {
               'user_id':mainUserId
             }
         ));
-
     print(response.body);
-
     var jsonData= jsonDecode(response.body);
-
     for(var eachUser in jsonData){
       FollowUserModal user = FollowUserModal.fromJson(eachUser);
       followedUserList.add(user);
     }
-
     if (response.statusCode == 200) {
       print("Succesfuly Got the followed user");
     } else {
@@ -446,6 +441,92 @@ class ApiService extends ChangeNotifier {
     notifyListeners();
   }
 
+  //unfollow user
+  Future UnfollowUser(int id) async {
+    var url = API.UnfollowUrl;
+    var response = await http.delete(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':mainUserId,
+              'followed_id': id,
+            }
+        ));
+    print(response.body);
+    var jsonData= jsonDecode(response.body);
+    for(var eachUser in jsonData){
+      FollowUserModal user = FollowUserModal.fromJson(eachUser);
+      followedUserList.add(user);
+    }
+    if (response.statusCode == 200) {
+      print("Succesfuly Got the followed user");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
 
+  //follow user
+
+  Future followUser(int followed_id) async {
+    var url = API.followUrl;
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'follower_id':mainUserId,
+              'followed_id':followed_id,
+            }
+        ));
+
+    if (response.statusCode == 200) {
+      print("Succesfuly follow user");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
+
+  //get main user rate
+  Future getMyRate() async {
+    var url = API.getAvgUrl;
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':mainUserId,
+            }
+        )
+    );
+    print(response.body);
+    var jsonData=jsonDecode(response.body);
+    print(jsonData);
+    double rate = double.parse(jsonData[0]['avg_ratio']);
+    print(rate);
+    mainUserRate=rate;
+    if (response.statusCode == 200) {
+      print("Succesfuly get ratio");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
+
+  bool isFollowedJob(Job job){
+
+    print("Girdi");
+
+    for(FollowUserModal user in followedUserList){
+
+      print(user.userId);
+      print(job.giverId);
+      if(int.parse(user.userId)==job.giverId){
+        print("true");
+        return true;
+      }
+
+    }
+    return false;
+  }
 
 }

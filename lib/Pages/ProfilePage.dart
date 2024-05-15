@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../ApiService.dart';
+import 'Follower.dart';
 import 'ProfileJobsPage.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -90,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
                 SizedBox(
-                  width: 20,
+                  width: 30,
                 )
               ],
             ),
@@ -101,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
                   Icon(
                     Icons.account_circle_rounded,
@@ -120,9 +121,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(color: Color(0xFF395077), fontSize: 20),
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.star,color:Colors.amber,size: 30,),
+                        Text("${value.mainUserRate}/5")
+                      ],
+                    ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 60),
                     child: Card(
@@ -132,7 +141,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: ()async {
+                                value.followedUserList.clear();
+                                await value.getFollowings();
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Followed()));
                               },
                               child: Column(
@@ -163,8 +174,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
-                              onTap:(){
-
+                              onTap:()async{
+                                  value.followerUserList.clear();
+                                  await value.getFollowers();
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>Follower()));
                               },
                               child: Column(
                                 children: [
