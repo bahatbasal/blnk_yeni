@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:blnk_yeni/LoginAndSignup/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'LoginAndSignup/api_connection.dart';
 import 'Modals/Job.dart';
 import 'Modals/Comment.dart';
+import 'Modals/RecommendedUserModal.dart';
 import 'Modals/UserCommenter.dart';
 import 'Modals/Application.dart';
 import 'Modals/FollowUserModal.dart';
@@ -33,6 +35,8 @@ class ApiService extends ChangeNotifier {
 
   List<FollowUserModal> followedUserList=[];
   List<FollowUserModal> followerUserList=[];
+
+  List<RecommendedUserModal> recommendedUserOnScreen=[];
 
 
   void generateAvailableJob() {
@@ -94,7 +98,7 @@ class ApiService extends ChangeNotifier {
       receivedapplicationlist.add(application);
       }
 
-    print(receivedapplicationlist.length);
+
     appliactionListOnPage=receivedapplicationlist;
     notifyListeners();
 
@@ -314,15 +318,7 @@ class ApiService extends ChangeNotifier {
 
   Future PostComment(String? comment,int? userfrom_id,int? userto_id, int? job_id,int rating ) async {
     var url = API.CommentUrl;
-    print(jsonEncode(
-        {
-          'userfrom_id': userfrom_id,
-          'userto_id':userto_id,
-          'job_id': job_id,
-          'comment': comment,
-          'ratio': rating
-        }
-    ));
+
     var response = await http.post(
         Uri.parse(url),
         body: jsonEncode(
@@ -388,9 +384,7 @@ class ApiService extends ChangeNotifier {
   //Get Follower User
 
   Future getFollowers() async {
-
     var url = API.followersUrl;
-
     var response = await http.post(
         Uri.parse(url),
         body: jsonEncode(
@@ -452,7 +446,6 @@ class ApiService extends ChangeNotifier {
               'followed_id': id,
             }
         ));
-    print(response.body);
     var jsonData= jsonDecode(response.body);
     for(var eachUser in jsonData){
       FollowUserModal user = FollowUserModal.fromJson(eachUser);
@@ -498,12 +491,16 @@ class ApiService extends ChangeNotifier {
             }
         )
     );
-    print(response.body);
+
     var jsonData=jsonDecode(response.body);
-    print(jsonData);
-    double rate = double.parse(jsonData[0]['avg_ratio']);
-    print(rate);
-    mainUserRate=rate;
+
+    if(jsonData.length==0) {
+      mainUserRate = 0;
+    }
+    else{
+      double rate = double.parse(jsonData[0]['avg_ratio']);
+      mainUserRate=rate;
+    }
     if (response.statusCode == 200) {
       print("Succesfuly get ratio");
     } else {
@@ -513,20 +510,93 @@ class ApiService extends ChangeNotifier {
   }
 
   bool isFollowedJob(Job job){
-
-    print("Girdi");
-
     for(FollowUserModal user in followedUserList){
-
-      print(user.userId);
-      print(job.giverId);
       if(int.parse(user.userId)==job.giverId){
-        print("true");
         return true;
       }
-
     }
     return false;
   }
+
+  //get main user rate
+  Future getRecommendedUsers() async {
+    var url = API.getRecommendedUsers;
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':mainUserId,
+            }
+        )
+    );
+    var jsonData=jsonDecode(response.body);
+
+    for(var eachUser in jsonData){
+
+      var userId=eachUser['user_id'];
+      print(userId);
+      double userRatio = await getRateById(int.parse(userId));
+
+      RecommendedUserModal user = await RecommendedUserModal(
+        userId: eachUser['user_id'],
+        userName: eachUser['user_name'],
+        userEmail:eachUser['user_email'],
+        userRatio: userRatio,
+      );
+     if(followedUserList.length!=0) {
+       bool isFollowedCheck=false;
+       for (var eachUser in followedUserList) {
+         if (int.parse(eachUser.userId )== int.parse(user.userId)) {
+           isFollowedCheck=true;
+         }
+       }
+       if(!isFollowedCheck){
+         recommendedUserOnScreen.add(user);
+       }
+     }
+     else{
+       recommendedUserOnScreen.add(user);
+     }
+    }
+    print(recommendedUserOnScreen.length);
+    if (response.statusCode == 200) {
+      print("Succesfuly get RecommendedUser");
+    } else {
+      print("Başarısız");
+    }
+    notifyListeners();
+  }
+
+  Future<double> getRateById(int id) async {
+    var url = API.getAvgUrl;
+    var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(
+            {
+              'user_id':id,
+            }
+        )
+    );
+
+    var jsonData=jsonDecode(response.body);
+
+
+    if (response.statusCode == 200) {
+      print("Succesfuly get ratio");
+    } else {
+      print("Başarısız");
+    }
+
+
+    if(jsonData.length==0){
+      return 0;
+    }
+    else{
+      double rate = double.parse(jsonData[0]['avg_ratio']);
+      return rate;
+    }
+
+  }
+
 
 }

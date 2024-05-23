@@ -202,15 +202,25 @@ class _LoginPageState extends State<LoginPage>
                                       msg: "Congratulations, you are logged-in successfully.");
 
                                   User userInfo = User.fromJson(resBodyOfLogin["userData"]);
+                                  print(1);
                                   value.mainUserId=userInfo.user_id;
+                                  print(1);
                                   value.mainUserMail=userInfo.user_email;
+                                  print(1);
                                   value.mainUserName=userInfo.user_name;
+                                  print(1);
                                   await value.getJobs();
+                                  print(1);
                                   await value.getMyRate();
+                                  print(1);
                                   value.followedUserList.clear();
                                   value.followerUserList.clear();
                                   await value.getFollowings();
+                                  print(1);
                                   await value.getFollowers();
+                                  print(1);
+                                  await value.getRecommendedUsers();
+                                  print(1);
                                   //save Userinfo to local storage
                                   await RememberUserPrefs.saveRememberUser(userInfo);
 

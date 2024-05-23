@@ -169,16 +169,15 @@ class _MainPageState extends State<MainPage> {
                 flex: 10,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 30),
-                  child: ListView.builder(
+                  child: value.recommendedUserOnScreen.length!=0?ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 10,
+                      itemCount: value.recommendedUserOnScreen.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: 120,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
                                   color: Colors.grey.shade200),
@@ -192,7 +191,8 @@ class _MainPageState extends State<MainPage> {
                                     color: Color(0xFF395077),
                                     size: 50,
                                   ),
-                                  Text('Bahat Başal'),
+                                  Text(value
+                                      .recommendedUserOnScreen[index].userName),
                                   Center(
                                     child: Row(
                                       mainAxisAlignment:
@@ -203,12 +203,74 @@ class _MainPageState extends State<MainPage> {
                                           color: Colors.amber,
                                           size: 15,
                                         ),
-                                        Text('1/5'),
+                                        Text(
+                                            '${value.recommendedUserOnScreen[index].userRatio.toStringAsFixed(1)}/5'),
                                         SizedBox(
                                           width: 10,
                                         ),
                                         GestureDetector(
-                                          onTap: () {},
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Container(
+                                                      height: 150,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Do you want to follow this User?"
+                                                        ),
+                                                      )
+                                                    ),
+                                                    actions: [
+                                                      MaterialButton(
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
+                                                          color: Colors.blue,
+                                                          child: Text(
+                                                            "Follow",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed:
+                                                              () async {
+                                                            await value.followUser(int.parse(value.recommendedUserOnScreen[index].userId));
+                                                            value.recommendedUserOnScreen.clear();
+                                                            value.followedUserList.clear();
+                                                            value.jobListOnScreen.clear();
+                                                            await value.getFollowings();
+                                                            await value.getRecommendedUsers();
+                                                            await value.getJobs();
+                                                            Navigator.pop(context);
+                                                              }),
+                                                      MaterialButton(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                          ),
+                                                          color: Colors.grey,
+                                                          child: Text(
+                                                            "Cancel",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onPressed: () {
+                                                            print("cancel");
+                                                            Navigator.pop(
+                                                                context);
+                                                          })
+                                                    ],
+                                                  );
+                                                });
+                                          },
                                           child: Container(
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -234,7 +296,8 @@ class _MainPageState extends State<MainPage> {
                             ),
                           ),
                         );
-                      }),
+                      })
+                  :Center(child: Text("There is no Recommended User for you")),
                 )),
 
             //Categories
@@ -266,23 +329,21 @@ class _MainPageState extends State<MainPage> {
                                 margin: EdgeInsets.fromLTRB(30, 0, 30, 10),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.all(16),
-                                  leading: Stack(
-                                      children: [
-
+                                  leading: Stack(children: [
                                     Icon(
                                       Icons.account_circle_rounded,
                                       size: 60,
                                       color: Color(0xFF395077),
                                     ),
-                                        value.isFollowedJob(value.jobListOnScreen[index])
-                                            ?
-                                        Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                          size: 25,
-                                        ):SizedBox(),
-                                  ]
-                                  ),
+                                    value.isFollowedJob(
+                                            value.jobListOnScreen[index])
+                                        ? Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                            size: 25,
+                                          )
+                                        : SizedBox(),
+                                  ]),
                                   title: Text(
                                     value.jobListOnScreen[index].name,
                                     style: TextStyle(fontSize: 20),

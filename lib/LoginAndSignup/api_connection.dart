@@ -30,8 +30,8 @@ class API
   static const followingsUrl= "$hostConnect/follow/followings.php";
   static const followersUrl= "$hostConnect/follow/getFollowers.php";
   static const UnfollowUrl= "$hostConnect/follow/unfollow.php";
-  static const followUrl= "$hostConnect/follow/tofollow.php";
-
+  static const followUrl= "$hostConnect/follow/toFollow.php";
+  static const getRecommendedUsers= "$hostConnect/follow/reccomendeduser.php";
 
 
 }
